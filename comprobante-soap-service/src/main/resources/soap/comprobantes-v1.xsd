@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn:fastfood:comprobantes:v1"
+           targetNamespace="urn:fastfood:comprobantes:v1"
+           elementFormDefault="qualified">
+  <xs:simpleType name="Importe">
+    <xs:restriction base="xs:decimal">
+      <xs:totalDigits value="12"/>
+      <xs:fractionDigits value="2"/>
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Detalle">
+    <xs:sequence>
+      <xs:element name="productoId" type="xs:long"/>
+      <xs:element name="nombreProducto" type="xs:string"/>
+      <xs:element name="cantidad" type="xs:int"/>
+      <xs:element name="precioUnitario" type="tns:Importe"/>
+      <xs:element name="subtotal" type="tns:Importe"/>
+      <xs:element name="observacion" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Venta">
+    <xs:sequence>
+      <xs:element name="pedidoId" type="xs:long"/>
+      <xs:element name="clienteId" type="xs:long"/>
+      <xs:element name="clienteNombres" type="xs:string"/>
+      <xs:element name="clienteCorreo" type="xs:string"/>
+      <xs:element name="metodoPago" type="xs:string"/>
+      <xs:element name="subtotal" type="tns:Importe"/>
+      <xs:element name="impuesto" type="tns:Importe"/>
+      <xs:element name="total" type="tns:Importe"/>
+      <xs:element name="detalle" type="tns:Detalle" minOccurs="1" maxOccurs="40"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Comprobante">
+    <xs:sequence>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element name="numero" type="xs:string"/>
+      <xs:element name="fechaEmision" type="xs:dateTime"/>
+      <xs:element name="venta" type="tns:Venta"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="generarComprobanteRequest">
+    <xs:complexType><xs:sequence>
+      <xs:element name="venta" type="tns:Venta"/>
+    </xs:sequence></xs:complexType>
+  </xs:element>
+  <xs:element name="generarComprobanteResponse">
+    <xs:complexType><xs:sequence>
+      <xs:element name="comprobante" type="tns:Comprobante"/>
+      <xs:element name="creado" type="xs:boolean"/>
+    </xs:sequence></xs:complexType>
+  </xs:element>
+  <xs:element name="consultarComprobanteRequest">
+    <xs:complexType><xs:sequence>
+      <xs:element name="pedidoId" type="xs:long"/>
+    </xs:sequence></xs:complexType>
+  </xs:element>
+  <xs:element name="consultarComprobanteResponse">
+    <xs:complexType><xs:sequence>
+      <xs:element name="comprobante" type="tns:Comprobante"/>
+    </xs:sequence></xs:complexType>
+  </xs:element>
+</xs:schema>

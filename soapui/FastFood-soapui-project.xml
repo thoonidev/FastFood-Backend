@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="fb34ed82-0b93-459f-be5f-eb673b9dc1de" activeEnvironment="Default" name="FastFood - Comprobantes SOAP" soapui-version="5.10.0" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:description>WSDL publico; operaciones autenticadas. Ejecutar el TestCase completo para renovar el token.</con:description><con:settings/><con:interface xsi:type="con:WsdlInterface" id="91515b56-3b7e-4228-a544-ef57e97a0587" wsaVersion="NONE" name="ComprobantesPortSoap11" type="wsdl" bindingName="{urn:fastfood:comprobantes:v1}ComprobantesPortSoap11" soapVersion="1_1" anonymous="optional" definition="http://localhost:8084/ws/comprobantes.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8084/ws/comprobantes.wsdl"><con:part><con:url>http://localhost:8084/ws/comprobantes.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="urn:fastfood:comprobantes:v1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="urn:fastfood:comprobantes:v1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:fastfood:comprobantes:v1">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="urn:fastfood:comprobantes:v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:simpleType name="Importe">
+        <xs:restriction base="xs:decimal">
+          <xs:totalDigits value="12"/>
+          <xs:fractionDigits value="2"/>
+          <xs:minInclusive value="0"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Detalle">
+        <xs:sequence>
+          <xs:element name="productoId" type="xs:long"/>
+          <xs:element name="nombreProducto" type="xs:string"/>
+          <xs:element name="cantidad" type="xs:int"/>
+          <xs:element name="precioUnitario" type="tns:Importe"/>
+          <xs:element name="subtotal" type="tns:Importe"/>
+          <xs:element minOccurs="0" name="observacion" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Venta">
+        <xs:sequence>
+          <xs:element name="pedidoId" type="xs:long"/>
+          <xs:element name="clienteId" type="xs:long"/>
+          <xs:element name="clienteNombres" type="xs:string"/>
+          <xs:element name="clienteCorreo" type="xs:string"/>
+          <xs:element name="metodoPago" type="xs:string"/>
+          <xs:element name="subtotal" type="tns:Importe"/>
+          <xs:element name="impuesto" type="tns:Importe"/>
+          <xs:element name="total" type="tns:Importe"/>
+          <xs:element maxOccurs="40" minOccurs="1" name="detalle" type="tns:Detalle"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Comprobante">
+        <xs:sequence>
+          <xs:element name="id" type="xs:long"/>
+          <xs:element name="numero" type="xs:string"/>
+          <xs:element name="fechaEmision" type="xs:dateTime"/>
+          <xs:element name="venta" type="tns:Venta"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="generarComprobanteRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="venta" type="tns:Venta"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="generarComprobanteResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="comprobante" type="tns:Comprobante"/>
+            <xs:element name="creado" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="consultarComprobanteRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="pedidoId" type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="consultarComprobanteResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="comprobante" type="tns:Comprobante"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="consultarComprobanteResponse">
+    <wsdl:part element="tns:consultarComprobanteResponse" name="consultarComprobanteResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="generarComprobanteResponse">
+    <wsdl:part element="tns:generarComprobanteResponse" name="generarComprobanteResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="generarComprobanteRequest">
+    <wsdl:part element="tns:generarComprobanteRequest" name="generarComprobanteRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="consultarComprobanteRequest">
+    <wsdl:part element="tns:consultarComprobanteRequest" name="consultarComprobanteRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ComprobantesPort">
+    <wsdl:operation name="consultarComprobante">
+      <wsdl:input message="tns:consultarComprobanteRequest" name="consultarComprobanteRequest"></wsdl:input>
+      <wsdl:output message="tns:consultarComprobanteResponse" name="consultarComprobanteResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="generarComprobante">
+      <wsdl:input message="tns:generarComprobanteRequest" name="generarComprobanteRequest"></wsdl:input>
+      <wsdl:output message="tns:generarComprobanteResponse" name="generarComprobanteResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ComprobantesPortSoap11" type="tns:ComprobantesPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="consultarComprobante">
+      <soap:operation soapAction="urn:fastfood:comprobantes:v1:consultarComprobante"/>
+      <wsdl:input name="consultarComprobanteRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="consultarComprobanteResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="generarComprobante">
+      <soap:operation soapAction="urn:fastfood:comprobantes:v1:generarComprobante"/>
+      <wsdl:input name="generarComprobanteRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="generarComprobanteResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ComprobantesPortService">
+    <wsdl:port binding="tns:ComprobantesPortSoap11" name="ComprobantesPortSoap11">
+      <soap:address location="http://localhost:8084/ws"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8084/ws</con:endpoint></con:endpoints><con:operation id="09b92b67-c33b-464c-9350-9f98d74c92e7" isOneWay="false" action="urn:fastfood:comprobantes:v1:consultarComprobante" name="consultarComprobante" bindingOperationName="consultarComprobante" type="Request-Response" outputName="consultarComprobanteResponse" inputName="consultarComprobanteRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="7b16a7d1-92bb-4f93-b211-ae2e97ef3724" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Authorization" value="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmYXN0Zm9vZC1pbnRlcm5hbCIsInN1YiI6Im9yZGVyLXNlcnZpY2UiLCJhdWQiOlsiY29tcHJvYmFudGUtc29hcC1zZXJ2aWNlIl0sInNjb3BlIjoiQ09NUFJPQkFOVEVfT1BFUkFSIiwianRpIjoiZGUxMzUwODgtYWIxMy00ZWUyLThhZjYtOGUyYmNhMWIwMjY5IiwiaWF0IjoxNzkxNTY1ODM4LCJleHAiOjE3OTE1NjU4OTh9.4Fk57CEykVg63ZP9Mjci91ZacxztHjUDS-Mgneu2aMI" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8084/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:fastfood:comprobantes:v1">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <urn:consultarComprobanteRequest>\r
+         <urn:pedidoId>84</urn:pedidoId>\r
+      </urn:consultarComprobanteRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:fastfood:comprobantes:v1:consultarComprobante"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="5a379223-14e7-4951-974a-17c9579f2e87" isOneWay="false" action="urn:fastfood:comprobantes:v1:generarComprobante" name="generarComprobante" bindingOperationName="generarComprobante" type="Request-Response" outputName="generarComprobanteResponse" inputName="generarComprobanteRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3607ca85-4fa4-4509-a8e9-f2f02ba1d76a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8084/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:fastfood:comprobantes:v1">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <urn:generarComprobanteRequest>\r
+         <urn:venta>\r
+            <urn:pedidoId>?</urn:pedidoId>\r
+            <urn:clienteId>?</urn:clienteId>\r
+            <urn:clienteNombres>?</urn:clienteNombres>\r
+            <urn:clienteCorreo>?</urn:clienteCorreo>\r
+            <urn:metodoPago>?</urn:metodoPago>\r
+            <urn:subtotal>?</urn:subtotal>\r
+            <urn:impuesto>?</urn:impuesto>\r
+            <urn:total>?</urn:total>\r
+            <!--1 to 40 repetitions:-->\r
+            <urn:detalle>\r
+               <urn:productoId>?</urn:productoId>\r
+               <urn:nombreProducto>?</urn:nombreProducto>\r
+               <urn:cantidad>?</urn:cantidad>\r
+               <urn:precioUnitario>?</urn:precioUnitario>\r
+               <urn:subtotal>?</urn:subtotal>\r
+               <!--Optional:-->\r
+               <urn:observacion>?</urn:observacion>\r
+            </urn:detalle>\r
+         </urn:venta>\r
+      </urn:generarComprobanteRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:fastfood:comprobantes:v1:generarComprobante"/></con:call></con:operation></con:interface><con:testSuite id="06a8eae0-d355-4b2b-8cc9-05f8f7629abd" name="Comprobantes"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="de285302-dada-499d-b4c0-36a5921b1849" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="01 - Consultar comprobante existente" searchProperties="true"><con:description>Configura PedidoConsulta con el ID de un pedido cuyo comprobante ya emitiste desde FastFood. Ejecuta el caso completo.</con:description><con:settings/><con:testStep type="groovy" name="Renovar token" id="de10a2c1-c2e2-4ee3-ac39-d614de4146a4"><con:settings/><con:config><script>import groovy.json.JsonOutput
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import java.nio.charset.StandardCharsets
+
+def proyecto = testRunner.testCase.testSuite.project
+def clave = proyecto.getPropertyValue('ClaveTecnica')
+assert clave &amp;&amp; clave.getBytes(StandardCharsets.UTF_8).length >= 32 : 'Configura ClaveTecnica en las propiedades del proyecto.'
+def ahora = System.currentTimeMillis().intdiv(1000)
+def b64 = { byte[] bytes -> Base64.urlEncoder.withoutPadding().encodeToString(bytes) }
+def header = b64(JsonOutput.toJson([alg:'HS256', typ:'JWT']).getBytes(StandardCharsets.UTF_8))
+def payload = b64(JsonOutput.toJson([
+    iss:'fastfood-internal', sub:'order-service', aud:['comprobante-soap-service'],
+    scope:'COMPROBANTE_OPERAR', jti:UUID.randomUUID().toString(), iat:ahora, exp:ahora + 60
+]).getBytes(StandardCharsets.UTF_8))
+def contenido = header + '.' + payload
+def mac = Mac.getInstance('HmacSHA256')
+mac.init(new SecretKeySpec(clave.getBytes(StandardCharsets.UTF_8), 'HmacSHA256'))
+context.setProperty('TokenSoap', contenido + '.' + b64(mac.doFinal(contenido.getBytes(StandardCharsets.UTF_8))))
+log.info('Credencial tecnica renovada para esta solicitud (60 segundos).')
+log.info('Bearer ' + context.getProperty('TokenSoap'))
+</script></con:config></con:testStep><con:testStep type="request" id="cb5f2d62-df1b-4ac2-b72d-73fa7ac06ddc" name="Consultar"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ComprobantesPortSoap11</con:interface><con:operation>consultarComprobante</con:operation><con:request name="Consultar" id="80a90715-81cb-4ed8-95c3-64c83c66387d"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Authorization" value="Bearer ${=context.getProperty(&amp;quot;TokenSoap&amp;quot;)}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#Endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ff="urn:fastfood:comprobantes:v1">
+  <soapenv:Header/>
+  <soapenv:Body><ff:consultarComprobanteRequest><ff:pedidoId>${#Project#PedidoConsulta}</ff:pedidoId></ff:consultarComprobanteRequest></soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="cc8a88ab-7519-4d0b-9701-e99435494028" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" id="23981054-24e3-4710-aa14-ef2d11419747" name="Not SOAP Fault"/><con:assertion type="Schema Compliance" id="6a39af13-0a61-48c5-9e1e-69bd200efe46" name="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="urn:fastfood:comprobantes:v1:consultarComprobante" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="55de22ef-d949-4011-93ae-3962f221e005" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="02 - Generar, repetir y consultar venta de prueba" searchProperties="true"><con:description>Inserta una venta academica de S/25 en SOAP. No registra ni paga un pedido en Order. Utiliza un ID de demostracion; conserva ese ID para reintentar.</con:description><con:settings/><con:testStep type="groovy" name="Preparar ID de demostracion" id="fd323584-6786-4f29-90f0-3084140881aa"><con:settings/><con:config><script>def proyecto = testRunner.testCase.testSuite.project
+if (!proyecto.getPropertyValue('PedidoPrueba')?.trim()) {
+    proyecto.setPropertyValue('PedidoPrueba', (9900000000000L + new Random().nextInt(1000000000)).toString())
+}
+assert proyecto.getPropertyValue('PedidoPrueba') ==~ /[1-9][0-9]*/ : 'PedidoPrueba debe ser un numero positivo.'
+log.info('Venta SOAP de demostracion: pedido ' + proyecto.getPropertyValue('PedidoPrueba'))
+</script></con:config></con:testStep><con:testStep type="groovy" name="Token para generar" id="dd1e439b-e96e-4db1-a6ef-929464901daa"><con:settings/><con:config><script>import groovy.json.JsonOutput
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import java.nio.charset.StandardCharsets
+
+def proyecto = testRunner.testCase.testSuite.project
+def clave = proyecto.getPropertyValue('ClaveTecnica')
+assert clave &amp;&amp; clave.getBytes(StandardCharsets.UTF_8).length >= 32 : 'Configura ClaveTecnica en las propiedades del proyecto.'
+def ahora = System.currentTimeMillis().intdiv(1000)
+def b64 = { byte[] bytes -> Base64.urlEncoder.withoutPadding().encodeToString(bytes) }
+def header = b64(JsonOutput.toJson([alg:'HS256', typ:'JWT']).getBytes(StandardCharsets.UTF_8))
+def payload = b64(JsonOutput.toJson([
+    iss:'fastfood-internal', sub:'order-service', aud:['comprobante-soap-service'],
+    scope:'COMPROBANTE_OPERAR', jti:UUID.randomUUID().toString(), iat:ahora, exp:ahora + 60
+]).getBytes(StandardCharsets.UTF_8))
+def contenido = header + '.' + payload
+def mac = Mac.getInstance('HmacSHA256')
+mac.init(new SecretKeySpec(clave.getBytes(StandardCharsets.UTF_8), 'HmacSHA256'))
+context.setProperty('TokenSoap', contenido + '.' + b64(mac.doFinal(contenido.getBytes(StandardCharsets.UTF_8))))
+log.info('Credencial tecnica renovada para esta solicitud (60 segundos).')
+</script></con:config></con:testStep><con:testStep type="request" id="6efe9063-71a6-44d2-ab0c-d906a6adfb12" name="Generar"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ComprobantesPortSoap11</con:interface><con:operation>generarComprobante</con:operation><con:request name="Generar" id="90a06be2-6f04-4ae4-b5f9-7e343d49cae1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Authorization" value="Bearer ${=context.getProperty(&amp;quot;TokenSoap&amp;quot;)}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#Endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ff="urn:fastfood:comprobantes:v1">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <ff:generarComprobanteRequest><ff:venta>
+      <ff:pedidoId>${#Project#PedidoPrueba}</ff:pedidoId>
+      <ff:clienteId>1</ff:clienteId>
+      <ff:clienteNombres>Cliente de demostracion SOAP</ff:clienteNombres>
+      <ff:clienteCorreo>demo-soap@fastfood.test</ff:clienteCorreo>
+      <ff:metodoPago>TARJETA</ff:metodoPago>
+      <ff:subtotal>25.00</ff:subtotal><ff:impuesto>0.00</ff:impuesto><ff:total>25.00</ff:total>
+      <ff:detalle>
+        <ff:productoId>1</ff:productoId><ff:nombreProducto>Hamburguesa de demostracion</ff:nombreProducto>
+        <ff:cantidad>2</ff:cantidad><ff:precioUnitario>12.50</ff:precioUnitario><ff:subtotal>25.00</ff:subtotal>
+        <ff:observacion>Prueba directa de SOAP</ff:observacion>
+      </ff:detalle>
+    </ff:venta></ff:generarComprobanteRequest>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="0c5495ed-d46c-4b4c-9384-521008fb38bd" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" id="8c840803-02c2-424b-873b-c99e1b604081" name="Not SOAP Fault"/><con:assertion type="Schema Compliance" id="a28f778a-5e7e-4b39-a027-9de08830032f" name="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="urn:fastfood:comprobantes:v1:generarComprobante"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Token para repetir" id="7a6b337c-13de-4676-a128-bec21e687db6"><con:settings/><con:config><script>import groovy.json.JsonOutput
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import java.nio.charset.StandardCharsets
+
+def proyecto = testRunner.testCase.testSuite.project
+def clave = proyecto.getPropertyValue('ClaveTecnica')
+assert clave &amp;&amp; clave.getBytes(StandardCharsets.UTF_8).length >= 32 : 'Configura ClaveTecnica en las propiedades del proyecto.'
+def ahora = System.currentTimeMillis().intdiv(1000)
+def b64 = { byte[] bytes -> Base64.urlEncoder.withoutPadding().encodeToString(bytes) }
+def header = b64(JsonOutput.toJson([alg:'HS256', typ:'JWT']).getBytes(StandardCharsets.UTF_8))
+def payload = b64(JsonOutput.toJson([
+    iss:'fastfood-internal', sub:'order-service', aud:['comprobante-soap-service'],
+    scope:'COMPROBANTE_OPERAR', jti:UUID.randomUUID().toString(), iat:ahora, exp:ahora + 60
+]).getBytes(StandardCharsets.UTF_8))
+def contenido = header + '.' + payload
+def mac = Mac.getInstance('HmacSHA256')
+mac.init(new SecretKeySpec(clave.getBytes(StandardCharsets.UTF_8), 'HmacSHA256'))
+context.setProperty('TokenSoap', contenido + '.' + b64(mac.doFinal(contenido.getBytes(StandardCharsets.UTF_8))))
+log.info('Credencial tecnica renovada para esta solicitud (60 segundos).')
+</script></con:config></con:testStep><con:testStep type="request" id="9de044c5-0179-4970-934d-b3c7b18af881" name="Repetir emision"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ComprobantesPortSoap11</con:interface><con:operation>generarComprobante</con:operation><con:request name="Repetir emision" id="cc368d56-6cb2-43b3-815b-1f4402365813"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Authorization" value="Bearer ${=context.getProperty(&amp;quot;TokenSoap&amp;quot;)}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#Endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ff="urn:fastfood:comprobantes:v1">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <ff:generarComprobanteRequest><ff:venta>
+      <ff:pedidoId>${#Project#PedidoPrueba}</ff:pedidoId>
+      <ff:clienteId>1</ff:clienteId>
+      <ff:clienteNombres>Cliente de demostracion SOAP</ff:clienteNombres>
+      <ff:clienteCorreo>demo-soap@fastfood.test</ff:clienteCorreo>
+      <ff:metodoPago>TARJETA</ff:metodoPago>
+      <ff:subtotal>25.00</ff:subtotal><ff:impuesto>0.00</ff:impuesto><ff:total>25.00</ff:total>
+      <ff:detalle>
+        <ff:productoId>1</ff:productoId><ff:nombreProducto>Hamburguesa de demostracion</ff:nombreProducto>
+        <ff:cantidad>2</ff:cantidad><ff:precioUnitario>12.50</ff:precioUnitario><ff:subtotal>25.00</ff:subtotal>
+        <ff:observacion>Prueba directa de SOAP</ff:observacion>
+      </ff:detalle>
+    </ff:venta></ff:generarComprobanteRequest>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a03e948-0efc-419b-b807-e264f3f83f84" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" id="8771294d-27dd-4674-a1c9-12f4b1dfa829" name="Not SOAP Fault"/><con:assertion type="Schema Compliance" id="36fd8ee1-cb5c-413e-a27d-42a922afdeb8" name="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="urn:fastfood:comprobantes:v1:generarComprobante"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Token para consultar" id="54b5500f-548d-4622-bd41-83b6d7ba4705"><con:settings/><con:config><script>import groovy.json.JsonOutput
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+import java.nio.charset.StandardCharsets
+
+def proyecto = testRunner.testCase.testSuite.project
+def clave = proyecto.getPropertyValue('ClaveTecnica')
+assert clave &amp;&amp; clave.getBytes(StandardCharsets.UTF_8).length >= 32 : 'Configura ClaveTecnica en las propiedades del proyecto.'
+def ahora = System.currentTimeMillis().intdiv(1000)
+def b64 = { byte[] bytes -> Base64.urlEncoder.withoutPadding().encodeToString(bytes) }
+def header = b64(JsonOutput.toJson([alg:'HS256', typ:'JWT']).getBytes(StandardCharsets.UTF_8))
+def payload = b64(JsonOutput.toJson([
+    iss:'fastfood-internal', sub:'order-service', aud:['comprobante-soap-service'],
+    scope:'COMPROBANTE_OPERAR', jti:UUID.randomUUID().toString(), iat:ahora, exp:ahora + 60
+]).getBytes(StandardCharsets.UTF_8))
+def contenido = header + '.' + payload
+def mac = Mac.getInstance('HmacSHA256')
+mac.init(new SecretKeySpec(clave.getBytes(StandardCharsets.UTF_8), 'HmacSHA256'))
+context.setProperty('TokenSoap', contenido + '.' + b64(mac.doFinal(contenido.getBytes(StandardCharsets.UTF_8))))
+log.info('Credencial tecnica renovada para esta solicitud (60 segundos).')
+</script></con:config></con:testStep><con:testStep type="request" id="6359eff2-d252-4dec-b291-2aeb55561748" name="Consultar generado"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ComprobantesPortSoap11</con:interface><con:operation>consultarComprobante</con:operation><con:request name="Consultar generado" id="0a755b2f-edac-47df-b068-b000ac7112b7"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Authorization" value="Bearer ${=context.getProperty(&amp;quot;TokenSoap&amp;quot;)}" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#Endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ff="urn:fastfood:comprobantes:v1">
+  <soapenv:Header/>
+  <soapenv:Body><ff:consultarComprobanteRequest><ff:pedidoId>${#Project#PedidoPrueba}</ff:pedidoId></ff:consultarComprobanteRequest></soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="0f2feea4-f85d-4e0f-b36e-2abd4779e36a" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" id="7a1f4def-fd6f-4e0d-8e2d-0ba3cecdef33" name="Not SOAP Fault"/><con:assertion type="Schema Compliance" id="9e76f0c2-e9f6-4322-ac75-1c2abfbc6f72" name="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="urn:fastfood:comprobantes:v1:consultarComprobante"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Verificar comprobante unico" id="bfe0fbc0-d92c-470b-bef0-502b4d5534af"><con:settings/><con:config><script>import groovy.util.XmlSlurper
+def leer = { nombre -> new XmlSlurper().parseText(testRunner.testCase.getTestStepByName(nombre).testRequest.responseContent) }
+def nodo = { xml, nombre -> xml.depthFirst().find { it.name() == nombre } }
+def primero = leer('Generar')
+def repetido = leer('Repetir emision')
+def consultado = leer('Consultar generado')
+assert nodo(repetido, 'creado').text() == 'false' : 'El reintento no debe crear otro documento.'
+def id = nodo(primero, 'id').text()
+assert id &amp;&amp; id == nodo(repetido, 'id').text() &amp;&amp; id == nodo(consultado, 'id').text()
+assert nodo(primero, 'numero').text() == nodo(consultado, 'numero').text()
+log.info('Emision, reintento y consulta recuperaron el mismo comprobante.')
+</script></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>Endpoint</con:name><con:value>http://localhost:8084/ws</con:value></con:property><con:property><con:name>ClaveTecnica</con:name><con:value/></con:property><con:property><con:name>PedidoConsulta</con:name><con:value>73</con:value></con:property><con:property><con:name>PedidoPrueba</con:name><con:value/></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

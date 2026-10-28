@@ -1,0 +1,14 @@
+# Artefactos locales de los proyectos FastFood.
+.env
+.env.*
+!.env.example
+/api-gateway/target/
+/auth-service/target/
+/catalog-service/target/
+/comprobante-soap-service/target/
+/eureka-server/target/
+/order-service/target/
+/socket-server/target/
+/order-service/archivos/
+/frontend-fastfood/node_modules/
+/frontend-fastfood/dist/

@@ -1,0 +1,1 @@
+{"clienteCorreo":"ana@fastfood.test","clienteId":1,"clienteNombres":"Ana Perez","detalle":[{"cantidad":2,"nombreProducto":"Hamburguesa","observacion":"Sin cebolla","precioUnitario":12.50,"productoId":1,"subtotal":25.00}],"impuesto":0.00,"metodoPago":"TARJETA","pedidoId":123456789,"subtotal":25.00,"total":25.00}

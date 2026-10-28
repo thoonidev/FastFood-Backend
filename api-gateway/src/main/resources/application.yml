@@ -1,0 +1,58 @@
+# Aplicacion y puerto
+spring:
+  application:
+    name: api-gateway
+  # Limites de espera al llamar a los servicios
+  http:
+    clients:
+      connect-timeout: 2s
+      read-timeout: 5s
+  # Rutas REST: se conserva el prefijo /api
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: auth
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**,/api/usuarios/**,/api/empleados/**
+            - id: catalog
+              uri: lb://catalog-service
+              predicates:
+                - Path=/api/productos/**,/api/categorias/**,/api/admin/productos/**,/api/admin/categorias/**
+            - id: order
+              uri: lb://order-service
+              predicates:
+                - Path=/api/cotizaciones/**,/api/pedidos/**,/api/conversaciones/**,/api/pagos/configuracion,/api/admin/dashboard,/api/admin/reportes/**
+
+server:
+  port: 8080
+
+# Registro de servicios en Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+# Frontend permitido y clave JWT externa
+fastfood:
+  # Consulta directa del administrador para proteger el diagnostico
+  auth:
+    url: http://localhost:8081
+  cors:
+    allowed-origin: http://localhost:5173
+  jwt:
+    secret: ${JWT_SECRET}
+
+# Diagnostico: administrador con estado vigente confirmado en Auth
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: never
